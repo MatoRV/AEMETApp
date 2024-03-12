@@ -6,11 +6,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aplicacionaemet.Controller.MainController;
 import com.example.aplicacionaemet.Controller.TiempoAdapter;
+import com.example.aplicacionaemet.Controller.TiempoListViewModel;
 import com.example.aplicacionaemet.Model.Tiempo;
 import com.example.aplicacionaemet.R;
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editText;
 
+    private TiempoListViewModel tiempoListViewModel;
+
     private TextView textView;
 
     private static MainActivity myActiveActivity;
@@ -43,18 +47,25 @@ public class MainActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
 
         stringArray = getResources().getStringArray(R.array.localidades_data);
+        tiempoListViewModel = new ViewModelProvider(this).get(TiempoListViewModel.class);
+        MainController.getSingleton().setupViewModel(tiempoListViewModel);
 
         MainController.getSingleton().setupSpinner(spinner,stringArray,this);
+
+
 
         editText = findViewById(R.id.editText);
 
         mRecyclerView = findViewById(R.id.rv_tiempo);
-
         mAdapter = new TiempoAdapter(this, mList);
-
         mRecyclerView.setAdapter(mAdapter);
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        tiempoListViewModel.getTiempos().observe(this, tiempos -> {
+            mList.clear();
+            mList.addAll(tiempos);
+            mAdapter.notifyDataSetChanged();
+        });
 
         textView = findViewById(R.id.tv_municipio);
 
@@ -66,17 +77,17 @@ public class MainActivity extends AppCompatActivity {
         MainController.setActivity(this);
     }
 
-    public void accessData() {
-
-        List<Tiempo> lista = MainController.getSingleton().getDataRequested();
-
-        mList.clear();
-        for (Tiempo tiempo : lista) {
-            mList.add(tiempo);
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
+//    public void accessData() {
+//
+//        List<Tiempo> lista = MainController.getSingleton().getDataRequested();
+//
+//        mList.clear();
+//        for (Tiempo tiempo : lista) {
+//            mList.add(tiempo);
+//        }
+//
+//        mAdapter.notifyDataSetChanged();
+//    }
 
     public void errorData(String error) {
         TextView tv = (TextView) findViewById(R.id.tv_municipio);

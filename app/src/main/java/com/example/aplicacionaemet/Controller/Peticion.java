@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 
 import java.io.IOException;
 
@@ -18,12 +19,14 @@ public class Peticion {
 
     private static final String API_KEY = "?api_key=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWN0b3JtYXRvcjVAZ21haWwuY29tIiwianRpIjoiMTdkZTUwNzYtNzEwMy00MzcyLTkyYWItYzEyM2FlYzcxMzZhIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3MDEzNzMyOTcsInVzZXJJZCI6IjE3ZGU1MDc2LTcxMDMtNDM3Mi05MmFiLWMxMjNhZWM3MTM2YSIsInJvbGUiOiIifQ.rBKbaWEEK3tA7ponxThxFTWGDvJPiRgE5m25fbwsv1Q";
 
+
+
     public Peticion() {
 
     }
 
     public void requestData(String URL, String municipio) {
-        if (municipio.equals("")) {
+        if (municipio.isEmpty()) {
             return;
         }
         OkHttpClient cliente = new OkHttpClient();
@@ -61,7 +64,7 @@ public class Peticion {
                     @Override
                     public void run() {
                         MainController.getSingleton().setDataFromHttp(respuesta);
-                        MainController.getSingleton().requestTiempoData(MainController.getSingleton().getDataFromHttp());
+                        //MainController.getSingleton().requestTiempoData(MainController.getSingleton().getDataFromHttp());
                     }
                 });
             }
@@ -103,10 +106,4 @@ public class Peticion {
             }
         });
     }
-
-
-
-
-
-
 }

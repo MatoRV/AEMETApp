@@ -17,6 +17,7 @@ public class Respuesta {
 
     protected String datos;
 
+
     public Respuesta(String entrada) {
         datos = entrada;
     }

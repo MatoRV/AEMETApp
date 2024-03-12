@@ -28,6 +28,8 @@ public class MainController {
 
     private String enlace;
 
+    private TiempoListViewModel tiempoListViewModel;
+
     private static MainActivity activeActivity;
 
     private MainController() {
@@ -40,7 +42,9 @@ public class MainController {
         }
         return mySingleController;
     }
-
+    public void setupViewModel(TiempoListViewModel tiempoListViewModel) {
+            this.tiempoListViewModel = tiempoListViewModel;
+    }
     public void setupSpinner(Spinner spinner, String[] array, Context context) {
         if (array == null || context == null) {
             return;
@@ -74,7 +78,7 @@ public class MainController {
                 }
                 textView.setText(seleccion);
                 municipio = cp + cm;
-                requestDataFromHttp(municipio);
+                tiempoListViewModel.linkAEMET(municipio);
             }
 
             @Override
@@ -123,43 +127,46 @@ public class MainController {
     }
 
     // Devuelve el enlace
-    public String getDataFromHttp() {
-        Log.d("Peticion", "Enlace: " + enlace);
-        return this.enlace;
-    }
+//    public String getDataFromHttp() {
+//        Log.d("Peticion", "Enlace: " + enlace);
+//        return this.enlace;
+//    }
 
     public List<Tiempo> getDataRequested() {
         return this.dataRequested;
     }
 
     // Es llamado en el View y trae la id del municipio
-    public void requestDataFromHttp(String municipio) {
+    public void requestDataFromHttp(String municipio, TiempoListViewModel tiempoListViewModel) {
         Peticion p = new Peticion();
         if (municipio != null) {
             p.requestData(URL, municipio);
         }
+        this.tiempoListViewModel = tiempoListViewModel;
         Log.d("Peticion","Municipio: "+municipio);
-
     }
 
-    public void requestTiempoData(String Url) {
+    public void requestTiempoData(String Url, TiempoListViewModel tiempoListViewModel) {
         Log.d("Peticion","Url tiempo: "+Url);
         Peticion p = new Peticion();
         p.requestDataTiempo(Url);
+        this.tiempoListViewModel = tiempoListViewModel;
     }
 
     // Es llamado cuando onResponse está correcto
     public void setDataFromHttp(String json) {
         Respuesta r = new Respuesta(json);
         Log.d("Peticion","JSON setDataFromHttp: "+json);
-        enlace = r.getUrlData();
-
+        tiempoListViewModel.loadTiempo(r.getUrlData());
     }
 
     public void setTiempoData(String json) {
         Respuesta r = new Respuesta(json);
         dataRequested = r.getTiempoData();
-        MainController.activeActivity.accessData();
+        tiempoListViewModel.setData(dataRequested);
+        Log.d("JSON", json);
+        Log.d("Data", dataRequested.toString());
+        //MainController.activeActivity.accessData();
     }
 
     public void setErrorFromHttp(String error) {
