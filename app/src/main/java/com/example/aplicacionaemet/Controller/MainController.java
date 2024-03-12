@@ -137,20 +137,18 @@ public class MainController {
     }
 
     // Es llamado en el View y trae la id del municipio
-    public void requestDataFromHttp(String municipio, TiempoListViewModel tiempoListViewModel) {
+    public void requestDataFromHttp(String municipio) {
         Peticion p = new Peticion();
         if (municipio != null) {
             p.requestData(URL, municipio);
         }
-        this.tiempoListViewModel = tiempoListViewModel;
         Log.d("Peticion","Municipio: "+municipio);
     }
 
-    public void requestTiempoData(String Url, TiempoListViewModel tiempoListViewModel) {
+    public void requestTiempoData(String Url) {
         Log.d("Peticion","Url tiempo: "+Url);
         Peticion p = new Peticion();
         p.requestDataTiempo(Url);
-        this.tiempoListViewModel = tiempoListViewModel;
     }
 
     // Es llamado cuando onResponse está correcto

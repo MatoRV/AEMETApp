@@ -23,7 +23,7 @@ public class TiempoListViewModel extends ViewModel {
     public void loadTiempo(String enlace) {
         Log.d("ViewModel", "Enlace viewmodel: " +enlace);
         if (enlace != null) {
-            MainController.getSingleton().requestTiempoData(enlace, this);
+            MainController.getSingleton().requestTiempoData(enlace);
             listaTiempo.postValue(MainController.getSingleton().getDataRequested());
         }
     }
@@ -33,6 +33,6 @@ public class TiempoListViewModel extends ViewModel {
     }
 
     public void linkAEMET(String municipio) {
-        MainController.getSingleton().requestDataFromHttp(municipio,this);
+        MainController.getSingleton().requestDataFromHttp(municipio);
     }
 }
